@@ -2,6 +2,8 @@ import pandas as pd
 from datetime import timedelta
 from formatting import apply_formatting
 import openpyxl
+from user_input import select_file, select_sheet_from_file
+from tkinter import Tk
 
 def extract_and_transform(filename, sheet_name, filter_value):
     xl = pd.ExcelFile(filename)
@@ -68,13 +70,16 @@ def write_to_excel(filename, dataframe, sheet_name):
         # Apply the formatting
         apply_formatting(worksheet)
 
-file_name = "C:\\Users\\foster.nilsson\\Downloads\\Jira (3).xlsx"
-sheet_name = "Overall_Defect Jira Exports"
+root = Tk()  # Create the Tk object here
+file_name = select_file(root)  # Pass the root object to the function
+if file_name:
+    sheet_name = select_sheet_from_file(file_name, root)
 
-# Process for "W9_BenefitsReporting"
-df_br_cumulative = extract_and_transform(file_name, sheet_name, "W9_BenefitsReporting")
-write_to_excel(file_name, df_br_cumulative, "BR Cumulative")
+    if sheet_name:
+    # Process for "W9_BenefitsReporting"
+        df_br_cumulative = extract_and_transform(file_name, sheet_name, "W9_BenefitsReporting")
+        write_to_excel(file_name, df_br_cumulative, "BR Cumulative")
 
-# Process for "Mock_1_CO"
-df_mock_cumulative = extract_and_transform(file_name, sheet_name, "Mock_1_CO")
-write_to_excel(file_name, df_mock_cumulative, "Mock Cumulative")   
+    # Process for "Mock_1_CO"
+        df_mock_cumulative = extract_and_transform(file_name, sheet_name, "Mock_1_CO")
+        write_to_excel(file_name, df_mock_cumulative, "Mock Cumulative")   
